@@ -85,6 +85,143 @@ ul {
   align-self: end;
 }
 
+/* Chevron conveyor, one 6.6s cycle (erase 0.9s, fall 0.6s, draw 0.9s, rests between).
+   The fall is real gravity (t squared) and lands with two bounces, 1px then
+   0.25px, at the same gravity, so it settles instead of slamming.
+   rest, the lowest erases left to right, rest, the upper two drop one place,
+   rest, a new one draws in at the top left to right. The end frame equals the
+   start frame, so the loop has no seam. Reduced motion: three still chevrons. */
+.chev-top {
+  transform: translateY(0);
+}
+
+.chev-mid {
+  transform: translateY(10px);
+}
+
+.chev-low {
+  transform: translateY(20px);
+}
+
+.chev-new {
+  clip-path: inset(0 100% 0 0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chev {
+    animation-duration: 6.6s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  .chev-low {
+    animation-name: chevron-erase;
+  }
+
+  .chev-top {
+    animation-name: chevron-drop-top;
+  }
+
+  .chev-mid {
+    animation-name: chevron-drop-mid;
+  }
+
+  .chev-new {
+    animation-name: chevron-draw;
+  }
+}
+
+@keyframes chevron-erase {
+  0%,
+  15.2% {
+    clip-path: inset(0 0 0 0);
+  }
+
+  28.8%,
+  100% {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+@keyframes chevron-drop-top {
+  0%,
+  34.11% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  43.21% {
+    transform: translateY(10px);
+    animation-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
+  }
+
+  46.06% {
+    transform: translateY(9px);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  48.94% {
+    transform: translateY(10px);
+    animation-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
+  }
+
+  50.38% {
+    transform: translateY(9.75px);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  51.82%,
+  100% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes chevron-drop-mid {
+  0%,
+  34.11% {
+    transform: translateY(10px);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  43.21% {
+    transform: translateY(20px);
+    animation-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
+  }
+
+  46.06% {
+    transform: translateY(19px);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  48.94% {
+    transform: translateY(20px);
+    animation-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
+  }
+
+  50.38% {
+    transform: translateY(19.75px);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  51.82%,
+  100% {
+    transform: translateY(20px);
+  }
+}
+
+@keyframes chevron-draw {
+  0%,
+  59.11% {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  72.71%,
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+
 .hero-meta {
   grid-area: meta;
   align-self: end;

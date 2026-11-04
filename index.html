@@ -15,15 +15,19 @@
         <h1>Markus Tamm</h1>
         <p class="intro">Software engineer working on Estonia's national login, digital signing and the security around them.</p>
       </div>
-      <!-- Three chevrons pointing down. Arms slope 1:2, the same angle as the mark; left black, right red.
-           Same width as the mark (56px); arm thickness 3 matches its red outline. -->
+      <!-- Three chevrons pointing down, run like a conveyor (see style.css).
+           Same width as the mark (56px); arms slope 1:2 like the mark, thickness 3 like its red outline. -->
       <svg class="chevrons" width="56" height="37" viewBox="0 0 56 37" aria-hidden="true">
-        <g id="chevron">
-          <polygon points="0,0 28,14 28,17 0,3" fill="#111"/>
-          <polygon points="28,14 56,0 56,3 28,17" fill="#B12B28"/>
-        </g>
-        <use href="#chevron" y="10"/>
-        <use href="#chevron" y="20"/>
+        <defs>
+          <g id="chevron">
+            <polygon points="0,0 28,14 28,17 0,3" fill="#111"/>
+            <polygon points="28,14 56,0 56,3 28,17" fill="#B12B28"/>
+          </g>
+        </defs>
+        <use class="chev chev-top" href="#chevron"/>
+        <use class="chev chev-mid" href="#chevron"/>
+        <use class="chev chev-low" href="#chevron"/>
+        <use class="chev chev-new" href="#chevron"/>
       </svg>
       <!-- Flags as SVG, not emoji: Windows shows emoji flags as two letters. -->
       <p class="hero-meta"><span>Estonian
