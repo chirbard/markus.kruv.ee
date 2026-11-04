@@ -1,0 +1,161 @@
+/* Base only: one font, one size step, a two-column grid. Design comes later, piece by piece. */
+
+:root {
+  color-scheme: light;
+  --text: #111;
+  --muted: #666;
+  --bg: #fff;
+  --gap: 1.5rem;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+}
+
+main {
+  max-width: 64rem;
+  padding: 0 1rem 4rem;
+  margin: 0 auto;
+}
+
+h1,
+h2 {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+a {
+  color: inherit;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+  margin-bottom: 3rem;
+}
+
+/* Hero: a book's title page. Marks top right, title middle left,
+   lines bottom left, colophon bottom right. */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    ".     mark"
+    "title title"
+    "chevrons meta";
+  /* Exactly one screen, same space above the mark as below the meta line. */
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 2.5rem 0;
+  margin-bottom: 4rem;
+}
+
+.mark {
+  grid-area: mark;
+  justify-self: end;
+}
+
+/* Centred, then lifted a little: the margin pushes the centre up by half of it. */
+.hero-title {
+  grid-area: title;
+  align-self: center;
+  margin-bottom: 5rem;
+}
+
+.chevrons {
+  grid-area: chevrons;
+  align-self: end;
+}
+
+.hero-meta {
+  grid-area: meta;
+  align-self: end;
+}
+
+.hero h1 {
+  font-size: clamp(3rem, 9vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.intro {
+  max-width: 30ch;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  line-height: 1.25;
+}
+
+.hero-meta {
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+/* Flags sit centred on the capital letters. The Estonian flag's white
+   stripe has its own hairline edge in the SVG so it doesn't vanish on white. */
+.flag {
+  vertical-align: 1px;
+}
+
+.work li {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: 0 var(--gap);
+  margin-bottom: 1rem;
+}
+
+.work .year,
+.work .where {
+  color: var(--muted);
+}
+
+.work .line,
+.work .where {
+  grid-column: 2;
+}
+
+.work .title {
+  font-weight: 700;
+}
+
+.links {
+  display: flex;
+  gap: var(--gap);
+}
+
+@media (min-width: 48rem) {
+  main {
+    padding: 0 2rem 6rem;
+  }
+
+  .row {
+    grid-template-columns: 12rem 1fr;
+    gap: var(--gap);
+  }
+}
+
+/* Break the line only between clauses, never inside one. */
+.hero-meta span {
+  white-space: nowrap;
+}
+
+.hero-meta .train {
+  display: block;
+}

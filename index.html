@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Markus Tamm</title>
+  <meta name="description" content="Software engineer working on Estonia's national login, digital signing and the security around them.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <img class="mark" src="mark.svg" alt="" width="56" height="42">
+      <div class="hero-title">
+        <h1>Markus Tamm</h1>
+        <p class="intro">Software engineer working on Estonia's national login, digital signing and the security around them.</p>
+      </div>
+      <!-- Three chevrons pointing down. Arms slope 1:2, the same angle as the mark; left black, right red.
+           Same width as the mark (56px); arm thickness 3 matches its red outline. -->
+      <svg class="chevrons" width="56" height="37" viewBox="0 0 56 37" aria-hidden="true">
+        <g id="chevron">
+          <polygon points="0,0 28,14 28,17 0,3" fill="#111"/>
+          <polygon points="28,14 56,0 56,3 28,17" fill="#B12B28"/>
+        </g>
+        <use href="#chevron" y="10"/>
+        <use href="#chevron" y="20"/>
+      </svg>
+      <!-- Flags as SVG, not emoji: Windows shows emoji flags as two letters. -->
+      <p class="hero-meta"><span>Estonian
+        <svg class="flag" width="12" height="7.5" viewBox="0 0 16 10" aria-hidden="true"><rect width="16" height="3.34" fill="#0072CE"/><rect y="3.33" width="16" height="3.34" fill="#000"/><rect y="6.66" width="16" height="3.34" fill="#fff"/><path d="M0.4 6.66V9.6H15.6V6.66" stroke="rgb(0 0 0 / 0.3)" stroke-width="0.8" fill="none"/></svg>,</span>
+        <span>living in Konstanz
+        <svg class="flag" width="12" height="7.5" viewBox="0 0 16 10" aria-hidden="true"><rect width="16" height="3.34" fill="#000"/><rect y="3.33" width="16" height="3.34" fill="#D00"/><rect y="6.66" width="16" height="3.34" fill="#FFCE00"/></svg></span>
+        <span class="train">often on a train to Zurich
+        <!-- i like trains -->
+        <svg class="flag" width="7.5" height="7.5" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" fill="#DA291C"/><rect x="13" y="6" width="6" height="20" fill="#fff"/><rect x="6" y="13" width="20" height="6" fill="#fff"/></svg></span></p>
+    </header>
+
+    <section class="row">
+      <h2 class="label">Currently</h2>
+      <p class="body">Leading the move of TARA and GovSSO, Estonia's national login and government single sign-on, to AWS at Nortal.</p>
+    </section>
+
+    <section class="row">
+      <h2 class="label">Work</h2>
+      <ol class="body work">
+        <li><span class="year">2026</span><span class="title">TARA &amp; GovSSO on AWS</span><span class="line">Moved Estonia's national login from Docker Compose to Kubernetes on AWS, leading the team.</span><span class="where">Nortal</span></li>
+        <li><span class="year">2026</span><span class="title">RIA DigiDoc 3.0 for iOS</span><span class="line">The national signing app: most of the UI, ID-card signing over NFC, PIN management.</span><span class="where">Nortal</span></li>
+        <li><span class="year">2026</span><span class="title">Property valuation assistant</span><span class="line">A Go tool that fills a valuer's report from three national registers, given an address.</span><span class="where">Client</span></li>
+        <li><span class="year">2026</span><span class="title">Olecus</span><span class="line">Real-estate listings shown like social media. Co-founded as CTO.</span><span class="where">Own company</span></li>
+        <li><span class="year">2025</span><span class="title">Juur.ai</span><span class="line">Twelve models in parallel on six free API keys. 2nd place, UT project contest.</span><span class="where">University</span></li>
+        <li><span class="year">2022–2025</span><span class="title">Print in City</span><span class="line">The Flutter app for printing at public printers across Europe. 2,500 installs.</span><span class="where">Overall Eesti</span></li>
+        <li><span class="year">2023–2024</span><span class="title">Estonian Defence Forces</span><span class="line">Cyber security specialist. Locked Shields and Defender for Estonia.</span><span class="where">Conscription</span></li>
+      </ol>
+    </section>
+
+    <section class="row">
+      <h2 class="label">Recognition</h2>
+      <p class="body">Locked Shields 2024, 3rd (blue team) · Cyber Battle of Nordic/Baltic 2023, 1st in Estonia · Enginaator 2025, 1st in IT · HTB CPTS</p>
+    </section>
+
+    <section class="row">
+      <h2 class="label">Education</h2>
+      <p class="body">University of Tartu, BSc Computer Science, 2024–2026. Three years in two. Thesis: AI in red-team operations.</p>
+    </section>
+
+    <section class="row">
+      <h2 class="label">Languages</h2>
+      <p class="body">Estonian, English, German (learning, B1).</p>
+    </section>
+
+    <section class="row">
+      <h2 class="label">Elsewhere</h2>
+      <ul class="body links">
+        <li><a href="https://github.com/chirbard">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/markus-tamm/">LinkedIn</a></li>
+        <li><a href="https://huggingface.co/chirbard">Hugging Face</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
