@@ -245,10 +245,17 @@ ul {
   text-align: right;
 }
 
-/* Flags sit centred on the capital letters. The Estonian flag's white
-   stripe has its own hairline edge in the SVG so it doesn't vanish on white. */
+/* Flags sit on the baseline like lower-case letters, a little taller than
+   x-height (8px at 14px Helvetica). The Estonian flag's white stripe has
+   its own hairline edge in the SVG so it doesn't vanish on white. */
 .flag {
-  vertical-align: 1px;
+  width: 1.77ex;
+  height: 1.105ex;
+  vertical-align: baseline;
+}
+
+.flag-square {
+  width: 1.105ex;
 }
 
 .work li {
