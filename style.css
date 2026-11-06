@@ -49,9 +49,10 @@ ul {
 
 /* Section headers read like a book's table of contents: bold capitals,
    a red number that is true of the section (its years or how many items),
-   and a black rule filling the rest of the row. Odd sections run text then
-   rule, even ones rule then text, so the page zigzags down. The rule is 3px
-   like the strokes of the mark and the chevrons. */
+   and black rules around it. Like the book, each header sits at its own
+   place in the row; --at is the grid column its text starts on (0 = flush
+   left), so the scatter is hand-picked and always lands on the grid. The
+   rule is 3px like the strokes of the mark and the chevrons. */
 /* Below the header, each section is a 12-column grid. Content sits in
    narrow blocks on it rather than full-width lines, and gets room to breathe
    so the headers don't outweigh it. On a phone everything is one column. */
@@ -83,18 +84,55 @@ ul {
   margin-top: calc(var(--section-space) - 2.5rem);
 }
 
-.section-head::after,
-.section:nth-of-type(even) .section-head::before {
+.section-head::before,
+.section-head::after {
   content: "";
-  flex: 1;
   min-width: 2rem;
   border-top: 3px solid var(--text);
   /* Centre on the capitals, which sit above the line box's middle. */
   margin-top: -0.12em;
 }
 
-.section:nth-of-type(even) .section-head::after {
+/* Lead rule: reaches column --at, minus the flex gap before the text. */
+.section-head::before {
+  flex: 0 1 calc(var(--at) * (100% + var(--gap)) / 12 - 0.4em);
+}
+
+.section-head::after {
+  flex: 1;
+}
+
+#currently {
+  --at: 0;
+}
+
+#currently .section-head::before {
   content: none;
+}
+
+#work {
+  --at: 4;
+}
+
+#recognition {
+  --at: 6;
+}
+
+/* Flush right: the lead rule takes all the room, no tail. */
+#education .section-head::before {
+  flex: 1;
+}
+
+#education .section-head::after {
+  content: none;
+}
+
+#languages {
+  --at: 3;
+}
+
+#elsewhere {
+  --at: 7;
 }
 
 .section-num {
@@ -365,7 +403,7 @@ ul {
     --section-space: 6rem;
   }
 
-  /* Blocks follow the zigzag: under the header text, away from the rule. */
+  /* Each block starts on its header's column (--at + 1). */
   .currently {
     grid-column: 1 / span 5;
     font-size: 1.25rem;
@@ -385,11 +423,11 @@ ul {
   }
 
   .languages {
-    grid-column: 1 / span 6;
+    grid-column: 4 / span 6;
   }
 
   .links {
-    grid-column: 10 / -1;
+    grid-column: 8 / -1;
   }
 }
 
