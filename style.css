@@ -4,10 +4,11 @@
   color-scheme: light;
   --text: #111;
   --muted: #666;
-  --rule: #ccc;
-  --rule-text: #999;
+  --red: #B12B28;
   --bg: #fff;
   --gap: 1.5rem;
+  /* Space above and below every section header, and from the hero to the first. */
+  --section-space: 3.5rem;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.45;
@@ -23,9 +24,6 @@
 
 body {
   background: var(--bg);
-  /* The full-width section lines are 100vw, which counts a desktop
-     scrollbar; clip so that never makes the page scroll sideways. */
-  overflow-x: clip;
 }
 
 main {
@@ -49,30 +47,58 @@ ul {
   list-style: none;
 }
 
-/* Sections below the hero take only the height their content needs. Each
-   starts with a hairline across the whole window (wider than main), like
-   the section marks in a printed book, and a small label just under it. */
+/* Section headers read like a book's table of contents: bold capitals,
+   a red number that is true of the section (its years or how many items),
+   and a black rule filling the rest of the row. Odd sections run text then
+   rule, even ones rule then text, so the page zigzags down. The rule is 3px
+   like the strokes of the mark and the chevrons. */
+/* Below the header, each section is a 12-column grid. Content sits in
+   narrow blocks on it rather than full-width lines, and gets room to breathe
+   so the headers don't outweigh it. On a phone everything is one column. */
 .section {
-  position: relative;
-  padding: 0.25rem 0 4rem;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
 }
 
-.section::before {
+.section > * {
+  grid-column: 1 / -1;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin: var(--section-space) 0;
+}
+
+/* The hero keeps 2.5rem of padding under its location line (it mirrors the
+   space above the mark), so the first header subtracts it to sit exactly
+   one section-space below that line. */
+.hero + .section .section-head {
+  margin-top: calc(var(--section-space) - 2.5rem);
+}
+
+.section-head::after,
+.section:nth-of-type(even) .section-head::before {
   content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 100vw;
-  margin-left: -50vw;
-  border-top: 1px solid var(--rule);
+  flex: 1;
+  min-width: 2rem;
+  border-top: 3px solid var(--text);
+  /* Centre on the capitals, which sit above the line box's middle. */
+  margin-top: -0.12em;
 }
 
-.section-label {
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: var(--rule-text);
-  text-align: center;
-  margin-bottom: 2rem;
+.section:nth-of-type(even) .section-head::after {
+  content: none;
+}
+
+.section-num {
+  color: var(--red);
 }
 
 /* Hero: a book's title page. Marks top right, title middle left,
@@ -302,14 +328,68 @@ ul {
   font-weight: 700;
 }
 
-.links {
-  display: flex;
-  gap: var(--gap);
+.cell-title,
+.cell-note,
+.education span {
+  display: block;
+}
+
+.cell-title {
+  font-weight: 700;
+}
+
+.cell-note {
+  color: var(--muted);
+}
+
+.cells {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem var(--gap);
+}
+
+.languages {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.links li + li {
+  margin-top: 0.25rem;
 }
 
 @media (min-width: 48rem) {
   main {
     padding: 0 2rem 6rem;
+  }
+
+  :root {
+    --section-space: 6rem;
+  }
+
+  /* Blocks follow the zigzag: under the header text, away from the rule. */
+  .currently {
+    grid-column: 1 / span 5;
+    font-size: 1.25rem;
+    line-height: 1.35;
+  }
+
+  .work {
+    grid-column: 5 / -1;
+  }
+
+  .recognition {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .education {
+    grid-column: 9 / -1;
+  }
+
+  .languages {
+    grid-column: 1 / span 6;
+  }
+
+  .links {
+    grid-column: 10 / -1;
   }
 }
 
