@@ -1,9 +1,11 @@
-/* Base only: one font, one size step, a two-column grid. Design comes later, piece by piece. */
+/* Base only: one font, one size step. Design comes later, piece by piece. */
 
 :root {
   color-scheme: light;
   --text: #111;
   --muted: #666;
+  --rule: #ccc;
+  --rule-text: #999;
   --bg: #fff;
   --gap: 1.5rem;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -21,6 +23,9 @@
 
 body {
   background: var(--bg);
+  /* The full-width section lines are 100vw, which counts a desktop
+     scrollbar; clip so that never makes the page scroll sideways. */
+  overflow-x: clip;
 }
 
 main {
@@ -44,11 +49,30 @@ ul {
   list-style: none;
 }
 
-.row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.25rem;
-  margin-bottom: 3rem;
+/* Sections below the hero take only the height their content needs. Each
+   starts with a hairline across the whole window (wider than main), like
+   the section marks in a printed book, and a small label just under it. */
+.section {
+  position: relative;
+  padding: 0.25rem 0 4rem;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  border-top: 1px solid var(--rule);
+}
+
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--rule-text);
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 /* Hero: a book's title page. Marks top right, title middle left,
@@ -65,7 +89,6 @@ ul {
   min-height: 100vh;
   min-height: 100svh;
   padding: 2.5rem 0;
-  margin-bottom: 4rem;
 }
 
 .mark {
@@ -287,11 +310,6 @@ ul {
 @media (min-width: 48rem) {
   main {
     padding: 0 2rem 6rem;
-  }
-
-  .row {
-    grid-template-columns: 12rem 1fr;
-    gap: var(--gap);
   }
 }
 
