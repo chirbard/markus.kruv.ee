@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/flow.css">
   <link rel="stylesheet" href="css/sequences.css">
   <link rel="stylesheet" href="css/overlay.css">
+  <link rel="stylesheet" href="css/colophon.css">
 </head>
 <body>
   <main>
@@ -45,11 +46,6 @@
         <!-- i like trains -->
         <svg class="flag flag-square" width="7.5" height="7.5" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" fill="#DA291C"/><rect x="13" y="6" width="6" height="20" fill="#fff"/><rect x="6" y="13" width="20" height="6" fill="#fff"/></svg></span></p>
     </header>
-
-    <section class="section" id="currently">
-      <h2 class="section-head"><span>Currently</span> <span class="section-num">2026</span></h2>
-      <p class="body currently">Leading the move of TARA and GovSSO, Estonia's national login and government single sign-on, to AWS at Nortal.</p>
-    </section>
 
     <section class="section" id="work" data-active="tara">
       <h2 class="section-head"><span>Work</span> <span class="section-num">2021–26</span></h2>
@@ -160,37 +156,48 @@
     </section>
 
     <section class="section" id="recognition">
-      <h2 class="section-head"><span>Recognition</span> <span class="section-num">4</span></h2>
+      <h2 class="section-head"><span>Recognition &amp; certificates&nbsp;<span class="section-num">6</span></span></h2>
       <ul class="body cells recognition">
-        <li><span class="cell-title">Locked Shields 2024</span><span class="cell-note">3rd place, blue team</span></li>
-        <li><span class="cell-title">Cyber Battle of Nordic/Baltic 2023</span><span class="cell-note">1st in Estonia</span></li>
-        <li><span class="cell-title">Enginaator 2025</span><span class="cell-note">1st in IT</span></li>
-        <li><span class="cell-title">HTB CPTS</span><span class="cell-note">Hack The Box Certified Penetration Testing Specialist</span></li>
+        <li class="award"><span class="award-mark" aria-hidden="true">3<sup>rd</sup></span><span class="cell-title">Locked Shields 2024</span><span class="cell-note">Blue team, NATO's live-fire cyber defence exercise</span></li>
+        <li class="award"><span class="award-mark" aria-hidden="true">1<sup>st</sup></span><span class="cell-title">Cyber Battle 2020–23</span><span class="cell-note">Five times; best: first in Estonia and fourth overall, Nordic/Baltic 2023</span></li>
+        <li class="award"><span class="award-mark" aria-hidden="true">4<sup>×</sup></span><span class="cell-title">Garage48, 2022–25</span><span class="cell-note">Four hackathons; best pitch at the 15th anniversary, 2025</span></li>
+        <li class="award"><span class="award-mark" aria-hidden="true">1<sup>st</sup></span><span class="cell-title">Enginaator 2025</span><span class="cell-note">First in IT</span></li>
+        <li class="award award-cert"><span class="award-mark" aria-hidden="true">CPTS</span><span class="cell-title">Hack The Box, 2024</span><span class="cell-note">Certified Penetration Testing Specialist</span></li>
+        <li class="award award-cert"><span class="award-mark" aria-hidden="true">HOHA</span><span class="cell-title">Clarified Security, 2024</span><span class="cell-note">Hands-on Hacking Advanced</span></li>
       </ul>
     </section>
 
     <section class="section" id="education">
       <h2 class="section-head"><span>Education</span> <span class="section-num">2024–26</span></h2>
-      <p class="body education"><span class="cell-title">University of Tartu</span><span>BSc Computer Science, 2024–2026</span><span>Three years in two.</span><span class="cell-note">Thesis: AI in red-team operations</span></p>
+      <p class="body edu-figure" aria-label="A three-year bachelor's degree in two years"><span class="edu-from" aria-hidden="true">3</span><span class="edu-arrow" aria-hidden="true">→</span><span class="edu-to" aria-hidden="true">2</span><span class="edu-caption">years, for a three-year bachelor's</span></p>
+      <p class="body education"><span class="cell-title">University of Tartu</span><span>BSc Computer Science, 2024–2026</span><span class="cell-note">Thesis: <a href="https://thesis.cs.ut.ee/cedef0da-4975-4dec-baf9-98293daa6814">AI in red-team operations</a></span></p>
     </section>
 
     <section class="section" id="languages">
       <h2 class="section-head"><span>Languages</span> <span class="section-num">3</span></h2>
-      <ul class="body cells languages">
-        <li><span class="cell-title">Estonian</span></li>
-        <li><span class="cell-title">English</span></li>
-        <li><span class="cell-title">German</span><span class="cell-note">learning, B1</span></li>
+      <ul class="body languages">
+        <li class="lang lang-native"><span class="lang-word" lang="et">Eesti</span><span class="cell-note">Estonian, native</span></li>
+        <li class="lang lang-fluent"><span class="lang-word" lang="en">English</span><span class="cell-note">C1, Cambridge Advanced</span></li>
+        <li class="lang lang-learning"><span class="lang-word" lang="de">Deutsch</span><span class="cell-note">German, B1, learning</span></li>
       </ul>
     </section>
 
-    <section class="section" id="elsewhere">
-      <h2 class="section-head"><span>Elsewhere</span></h2>
-      <ul class="body links">
+    <!-- Closing page: a wordless divider, two small columns, then the name
+         filling the width and standing on the bottom edge. -->
+    <hr class="colophon-rule">
+    <footer class="colophon">
+      <div class="colophon-text">
+        <p>Open to software engineering roles in Switzerland and Germany.</p>
+        <p>Living in Konstanz.</p>
+        <p>© 2026 Markus Tamm</p>
+      </div>
+      <ul class="colophon-links">
         <li><a href="https://github.com/chirbard">GitHub</a></li>
         <li><a href="https://www.linkedin.com/in/markus-tamm/">LinkedIn</a></li>
         <li><a href="https://huggingface.co/chirbard">Hugging Face</a></li>
       </ul>
-    </section>
+      <p class="colophon-name" aria-hidden="true">Markus Tamm</p>
+    </footer>
   </main>
   <script src="work.js" defer></script>
 </body>

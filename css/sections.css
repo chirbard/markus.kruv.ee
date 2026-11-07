@@ -53,20 +53,17 @@
   flex: 1;
 }
 
-#currently {
-  --at: 0;
-}
-
-#currently .section-head::before {
-  content: none;
-}
-
 #work {
   --at: 4;
 }
 
+/* The longest header: flush left so it stays on one line. */
 #recognition {
-  --at: 6;
+  --at: 0;
+}
+
+#recognition .section-head::before {
+  content: none;
 }
 
 /* Flush right: the lead rule takes all the room, no tail. */
@@ -80,10 +77,6 @@
 
 #languages {
   --at: 3;
-}
-
-#elsewhere {
-  --at: 7;
 }
 
 .section-num {
@@ -107,38 +100,141 @@
 .cells {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem var(--gap);
+  gap: 4.5rem var(--gap);
 }
 
+/* Languages: each written in itself, its size the level, all on one
+   baseline like a scale. */
 .languages {
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 3.5rem 3.5rem;
 }
 
-.links li + li {
-  margin-top: 0.25rem;
+.lang-word {
+  display: block;
+  margin-bottom: 1.4rem;
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.035em;
+}
+
+.lang-native .lang-word {
+  font-size: clamp(3.5rem, 10vw, 8rem);
+}
+
+.lang-fluent .lang-word {
+  font-size: clamp(2.5rem, 6.5vw, 5.25rem);
+}
+
+.lang-learning .lang-word {
+  font-size: clamp(1.75rem, 4vw, 3.25rem);
+  color: var(--muted);
+}
+
+/* Education: the statement as the image. 3 years became 2. */
+.edu-figure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.12em;
+  font-size: clamp(6rem, 18vw, 14rem);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+}
+
+.edu-from {
+  color: var(--rule-quiet);
+}
+
+.edu-arrow {
+  font-size: 0.45em;
+  font-weight: 400;
+  color: var(--rule-quiet);
+}
+
+.edu-to {
+  color: var(--red);
+}
+
+.edu-caption {
+  flex-basis: 100%;
+  margin-top: 2.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+.education {
+  margin-top: 5.5rem;
+}
+
+.education a {
+  color: inherit;
+}
+
+/* Recognition: the result is the image, set big, like the 45/159 tile.
+   Red for a placing against others, black for a certificate earned. All
+   marks share one box height so the titles under them line up. */
+.award {
+  --award-size: clamp(3rem, 7vw, 5.5rem);
+}
+
+.award-mark {
+  display: flex;
+  align-items: flex-end;
+  height: calc(var(--award-size) * 0.9);
+  margin-bottom: 2.25rem;
+  font-size: var(--award-size);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.045em;
+  color: var(--red);
+}
+
+.award-mark sup {
+  align-self: flex-start;
+  margin-left: 0.06em;
+  font-size: 0.32em;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.award-cert .award-mark {
+  font-size: calc(var(--award-size) * 0.7);
+  color: var(--text);
 }
 
 @media (min-width: 48rem) {
-  /* Each block starts on its header's column (--at + 1). */
-  .currently {
-    grid-column: 1 / span 5;
-    font-size: 1.25rem;
-    line-height: 1.35;
+  /* Two rows of three, every mark the same size: competitions above,
+     a prize and two certificates below. */
+  .recognition {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6rem 4.5rem;
   }
 
-  .recognition {
-    grid-template-columns: repeat(4, 1fr);
+  /* The figure under the right-flush header, the facts low on the left. */
+  .edu-figure {
+    grid-column: 6 / -1;
+    grid-row: 2;
   }
 
   .education {
-    grid-column: 9 / -1;
+    grid-column: 1 / span 4;
+    grid-row: 2;
+    align-self: end;
+    margin-top: 0;
   }
 
+  /* Spread edge to edge: Eesti starts at the left edge, Deutsch ends
+     where the divider ends; the gaps take what's left, and the row wraps
+     rather than overflow on a narrow window. */
   .languages {
-    grid-column: 4 / span 6;
-  }
-
-  .links {
-    grid-column: 8 / -1;
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    gap: 3.5rem 2rem;
   }
 }

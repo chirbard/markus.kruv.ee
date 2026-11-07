@@ -9,7 +9,7 @@
   --bg: #fff;
   --gap: 1.5rem;
   /* Space above and below every section header, and from the hero to the first. */
-  --section-space: 3.5rem;
+  --section-space: 4.5rem;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.45;
@@ -29,7 +29,7 @@ body {
 
 main {
   max-width: 64rem;
-  padding: 0 1rem 4rem;
+  padding: 0 1rem;
   margin: 0 auto;
 }
 
@@ -50,10 +50,10 @@ ul {
 
 @media (min-width: 48rem) {
   main {
-    padding: 0 2rem 6rem;
+    padding: 0 2rem;
   }
 
   :root {
-    --section-space: 6rem;
+    --section-space: 8rem;
   }
 }

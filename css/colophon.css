@@ -1,0 +1,69 @@
+/* The closing page, like a book's last: two short columns of small
+   monospaced capitals, a closing line on the leftmost column and the
+   links further right, both resting on the name, which is set to fill
+   the content width exactly: with this letter-spacing "Markus Tamm" is
+   6.353em wide, so 100cqw / 6.353 = 15.74cqw. Measure again if the
+   name, font or spacing changes. */
+/* The same 3px rule as the section headers, with no name: the book is
+   ending, not starting another chapter. */
+.colophon-rule {
+  margin: var(--section-space) 0 0;
+  border: 0;
+  border-top: 3px solid var(--text);
+}
+
+.colophon {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+  align-items: end;
+  margin-top: var(--section-space);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.colophon-text {
+  grid-column: 1 / span 6;
+}
+
+.colophon-links {
+  grid-column: 7 / span 6;
+}
+
+/* Underlined always, so they read as links. */
+.colophon a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+}
+
+.colophon-name {
+  --name-fit: 15.74cqw;
+  grid-column: 1 / -1;
+  margin-top: 2rem;
+  /* The font keeps room below the baseline for descenders, and the page
+     counts it as height. The name has none, so clip it: the box ends on
+     the baseline and the letters stand on the page's bottom edge. */
+  overflow: clip;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: var(--name-fit);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.035em;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+@media (min-width: 48rem) {
+  .colophon-text {
+    grid-column: 1 / span 4;
+  }
+
+  .colophon-links {
+    grid-column: 6 / span 3;
+  }
+}
