@@ -1,22 +1,92 @@
 // Work section: hovering, focusing or tapping a row shows that project's
-// collage, and the collage drifts with the pointer. The page works without
-// this file: the HTML marks TARA as active, so its collage shows.
+// collage, and the collage drifts with the pointer. On a phone a tapped
+// row opens its collage full-screen over the page instead, closed by the
+// cross, Escape or the back gesture. The page works without this file:
+// the HTML marks TARA as active, so its collage shows on desktop.
 "use strict";
 
 const EASE = 0.08; // share of the remaining distance covered per frame
 const SETTLED = 0.001; // stop animating below this distance
 const LEFT_LIMIT = -0.35; // furthest left drift, reached at the stage's left edge
+const PHONE = window.matchMedia("(max-width: 47.99rem)"); // same breakpoint as style.css
 
-function activateProjectRows(section) {
+function activateProjectRows(section, overlay) {
   const rows = section.querySelectorAll(".work li[data-p]");
   for (const row of rows) {
     const show = () => {
       section.dataset.active = row.dataset.p;
     };
-    row.addEventListener("pointerenter", show);
-    row.addEventListener("focus", show);
-    row.addEventListener("click", show);
+    row.addEventListener("pointerenter", () => {
+      if (!PHONE.matches) {
+        show();
+      }
+    });
+    row.addEventListener("focus", () => {
+      if (!PHONE.matches) {
+        show();
+      }
+    });
+    row.addEventListener("click", () => {
+      show();
+      if (PHONE.matches) {
+        overlay.open(row);
+      }
+    });
+    row.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && PHONE.matches) {
+        show();
+        overlay.open(row);
+      }
+    });
   }
+}
+
+// The phone overlay. Opening pushes a history entry so the back gesture
+// closes it instead of leaving the page; closing returns focus to the row.
+function phoneOverlay(section, stage) {
+  const close = stage.querySelector(".stage-close");
+  let opener = null;
+
+  const hide = () => {
+    if (!section.classList.contains("is-open")) {
+      return;
+    }
+    section.classList.remove("is-open");
+    stage.removeAttribute("role");
+    stage.removeAttribute("aria-modal");
+    document.documentElement.style.overflow = "";
+    if (opener) {
+      opener.focus({ preventScroll: true });
+    }
+  };
+
+  const open = (row) => {
+    opener = row;
+    section.classList.add("is-open");
+    stage.setAttribute("role", "dialog");
+    stage.setAttribute("aria-modal", "true");
+    document.documentElement.style.overflow = "hidden";
+    history.pushState({ workOverlay: true }, "");
+    close.focus({ preventScroll: true });
+  };
+
+  const closeByUser = () => {
+    if (history.state && history.state.workOverlay) {
+      history.back(); // popstate hides it
+      return;
+    }
+    hide();
+  };
+
+  close.addEventListener("click", closeByUser);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeByUser();
+    }
+  });
+  window.addEventListener("popstate", hide);
+  PHONE.addEventListener("change", hide);
+  return { open };
 }
 
 function driftWithPointer(section, stage) {
@@ -63,7 +133,7 @@ function setUpWork() {
   if (!section || !stage) {
     return;
   }
-  activateProjectRows(section);
+  activateProjectRows(section, phoneOverlay(section, stage));
 
   const stillMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
