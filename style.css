@@ -374,6 +374,16 @@ ul {
   letter-spacing: -0.01em;
 }
 
+/* The client's full legal name: small and faded, but there, so the work
+   reads as real engagements. */
+.work .org {
+  grid-column: 2;
+  margin-top: 0.3rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+  color: var(--rule-quiet);
+}
+
 .cell-title,
 .cell-note,
 .education span {
@@ -468,6 +478,81 @@ ul {
   background: var(--text);
   font-size: 1.25rem;
   padding: 1.5rem;
+}
+
+/* A number as the image, where the work itself can't be shown. */
+.layer.tile-figure {
+  container-type: inline-size;
+  padding: 1.25rem;
+}
+
+.tile-figure figcaption {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  text-align: left;
+}
+
+.figure-number {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 46cqw;
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+}
+
+.figure-of {
+  font-size: 0.4em;
+  letter-spacing: -0.02em;
+  color: rgb(255 255 255 / 0.55);
+}
+
+.figure-label {
+  font-size: 8cqw;
+  line-height: 1.25;
+}
+
+/* Military work stays off the page: a sheet whose every line is blacked
+   out, with a stamp in the logo red. --bar is each line's length. */
+.layer.tile-redacted {
+  container-type: inline-size;
+  aspect-ratio: 3 / 4;
+  display: block;
+  padding: 12% 10%;
+  background: #fbfbf8;
+}
+
+.redacted-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 5.5%;
+  height: 100%;
+}
+
+.redacted-bars span {
+  display: block;
+  width: var(--bar);
+  height: 4.5%;
+  background: var(--text);
+}
+
+.redacted-stamp {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  translate: -50% -50%;
+  rotate: -14deg;
+  padding: 0.3em 0.6em;
+  border: 3px solid var(--red);
+  color: var(--red);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11cqw;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.9;
 }
 
 .note {
@@ -1781,7 +1866,8 @@ ul {
 
   /* The whole screen below the cross. Pieces use their phone place and
      width (--xm, --wm: about 1.4x the desktop size, pulled in so they stay
-     on screen); their vertical places stay as on desktop. */
+     on screen); their vertical places stay as on desktop unless --ym
+     says otherwise. */
   .collage {
     display: none;
     inset: 4rem 0 1rem;
@@ -1789,6 +1875,7 @@ ul {
 
   .collage > * {
     left: var(--xm, var(--x));
+    top: var(--ym, var(--y));
   }
 
   .layer,
@@ -1802,7 +1889,7 @@ ul {
     top: 50%;
     z-index: 0;
     translate: 0 -50%;
-    font-size: min(30vw, calc(88svh / (0.6 * var(--n))));
+    font-size: min(30vw, calc((100svh - 6rem) / (0.68 * var(--n))));
     line-height: 0.76;
   }
 
@@ -1888,7 +1975,7 @@ ul {
 
   to {
     left: var(--xm, var(--x));
-    top: var(--y);
+    top: var(--ym, var(--y));
     opacity: 1;
     scale: 1;
   }
@@ -1906,7 +1993,8 @@ ul {
   }
 }
 
-/* The active project: its row turns black, its collage fades in. */
+/* The active project: its row turns black (its client name grey), its
+   collage fades in. */
 #work[data-active="tara"] li[data-p="tara"],
 #work[data-active="digidoc"] li[data-p="digidoc"],
 #work[data-active="valuation"] li[data-p="valuation"],
@@ -1918,6 +2006,19 @@ ul {
 #work[data-active="edf"] li[data-p="edf"],
 #work[data-active="rentgo"] li[data-p="rentgo"] {
   color: var(--text);
+}
+
+#work[data-active="tara"] li[data-p="tara"] .org,
+#work[data-active="digidoc"] li[data-p="digidoc"] .org,
+#work[data-active="valuation"] li[data-p="valuation"] .org,
+#work[data-active="olecus"] li[data-p="olecus"] .org,
+#work[data-active="summerswap"] li[data-p="summerswap"] .org,
+#work[data-active="wastelocker"] li[data-p="wastelocker"] .org,
+#work[data-active="juur"] li[data-p="juur"] .org,
+#work[data-active="pic"] li[data-p="pic"] .org,
+#work[data-active="edf"] li[data-p="edf"] .org,
+#work[data-active="rentgo"] li[data-p="rentgo"] .org {
+  color: var(--muted);
 }
 
 #work[data-active="tara"] .collage[data-p="tara"],
@@ -1955,16 +2056,15 @@ ul {
     line-height: 1.35;
   }
 
-  /* The index is exactly as tall as the stage: its rows spread evenly,
-     the first level with the top of the stage and the last with its
-     bottom. */
+  /* The index is taller than the stage, so the stage is sticky: it
+     starts level with the first row, stays centred in the window while
+     the index scrolls, and ends level with the last row. */
   .work {
     grid-column: 1 / span 4;
     align-self: start;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: var(--stage-h);
+    gap: 4rem;
   }
 
   .work li {
@@ -1982,6 +2082,8 @@ ul {
   .stage {
     grid-column: 6 / -1;
     align-self: start;
+    position: sticky;
+    top: max(1rem, calc(50svh - var(--stage-h) / 2));
     margin-top: 0;
   }
 

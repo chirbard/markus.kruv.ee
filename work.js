@@ -41,6 +41,45 @@ function activateProjectRows(section, overlay) {
   }
 }
 
+// When the active row scrolls out of the window, the highest row still in
+// the window becomes active, so the stage never shows a project you can't
+// see in the index. Desktop only; hovering still wins.
+function followScroll(section) {
+  const rows = Array.from(section.querySelectorAll(".work li[data-p]"));
+  let queued = false;
+
+  const inWindow = (row) => {
+    const box = row.getBoundingClientRect();
+    return box.bottom > 0 && box.top < window.innerHeight;
+  };
+
+  const check = () => {
+    queued = false;
+    if (PHONE.matches) {
+      return;
+    }
+    const active = rows.find((row) => row.dataset.p === section.dataset.active);
+    if (active && inWindow(active)) {
+      return;
+    }
+    const highest = rows.find(inWindow);
+    if (highest) {
+      section.dataset.active = highest.dataset.p;
+    }
+  };
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!queued) {
+        queued = true;
+        requestAnimationFrame(check);
+      }
+    },
+    { passive: true },
+  );
+}
+
 // The phone overlay. Opening pushes a history entry so the back gesture
 // closes it instead of leaving the page; closing returns focus to the row.
 function phoneOverlay(section, stage) {
@@ -134,6 +173,7 @@ function setUpWork() {
     return;
   }
   activateProjectRows(section, phoneOverlay(section, stage));
+  followScroll(section);
 
   const stillMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
