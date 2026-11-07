@@ -1,0 +1,167 @@
+/* The close button belongs to the phone overlay only. */
+.stage-close {
+  display: none;
+}
+
+/* Phone: no room beside the index, so a tapped row opens its collage
+   full-screen on top of the page (work.js adds .is-open). The collage
+   keeps its desktop shape (5:6), centred, and its pieces start gathered
+   in the middle, a little turned, then scatter out to their places one
+   after another. A cross top left closes it. */
+@media (max-width: 47.99rem) {
+  .stage {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    margin: 0;
+    aspect-ratio: auto;
+    background: var(--bg);
+  }
+
+  #work.is-open .stage {
+    display: block;
+  }
+
+  .stage-close {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    background: none;
+    color: var(--text);
+  }
+
+  /* The whole screen below the cross. Pieces use their phone place and
+     width (--xm, --wm: about 1.4x the desktop size, pulled in so they stay
+     on screen); their vertical places stay as on desktop unless --ym
+     says otherwise. */
+  .collage {
+    display: none;
+    inset: 4rem 0 1rem;
+  }
+
+  .collage > * {
+    left: var(--xm, var(--x));
+    top: var(--ym, var(--y));
+  }
+
+  .layer,
+  .note {
+    width: var(--wm, var(--w));
+  }
+
+  /* The name as big as the screen allows, flush with the screen's left or
+     right edge, behind the images. --n is its letter count. */
+  .vtitle {
+    top: 50%;
+    z-index: 0;
+    translate: 0 -50%;
+    font-size: min(30vw, calc((100svh - 6rem) / (0.68 * var(--n))));
+    line-height: 0.76;
+  }
+
+  .vtitle-left {
+    left: 0;
+  }
+
+  .vtitle-right {
+    left: auto;
+    right: 0;
+  }
+
+  #work[data-active="tara"] .collage[data-p="tara"],
+  #work[data-active="digidoc"] .collage[data-p="digidoc"],
+  #work[data-active="valuation"] .collage[data-p="valuation"],
+  #work[data-active="olecus"] .collage[data-p="olecus"],
+  #work[data-active="summerswap"] .collage[data-p="summerswap"],
+  #work[data-active="wastelocker"] .collage[data-p="wastelocker"],
+  #work[data-active="juur"] .collage[data-p="juur"],
+  #work[data-active="pic"] .collage[data-p="pic"],
+  #work[data-active="edf"] .collage[data-p="edf"],
+  #work[data-active="rentgo"] .collage[data-p="rentgo"] {
+    display: block;
+  }
+
+  /* Over the bigger images the text block needs its own ground. */
+  .note {
+    z-index: 20;
+    font-size: 0.75rem;
+    padding: 0.5rem 0.625rem;
+    background: var(--bg);
+  }
+
+  /* On a phone no row is "active" until tapped, so all stay black. */
+  .work li {
+    color: var(--text);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    #work.is-open .collage > :not(.vtitle) {
+      animation: scatter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    #work.is-open .vtitle {
+      animation: slam 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    #work.is-open .collage > :nth-child(2) {
+      animation-delay: 0.06s;
+      --turn: -6deg;
+    }
+
+    #work.is-open .collage > :nth-child(3) {
+      animation-delay: 0.12s;
+      --turn: 5deg;
+    }
+
+    #work.is-open .collage > :nth-child(4) {
+      animation-delay: 0.18s;
+      --turn: -3deg;
+    }
+
+    #work.is-open .collage > :nth-child(5) {
+      animation-delay: 0.24s;
+      --turn: 7deg;
+    }
+
+    #work.is-open .collage > :nth-child(n + 6) {
+      animation-delay: 0.3s;
+      --turn: -5deg;
+    }
+  }
+}
+
+@keyframes scatter {
+  from {
+    left: 34%;
+    top: 30%;
+    opacity: 0;
+    scale: 0.7;
+    rotate: var(--turn, 4deg);
+  }
+
+  to {
+    left: var(--xm, var(--x));
+    top: var(--ym, var(--y));
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes slam {
+  from {
+    opacity: 0;
+    scale: 1.25;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}

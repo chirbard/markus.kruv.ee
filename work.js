@@ -3,12 +3,13 @@
 // row opens its collage full-screen over the page instead, closed by the
 // cross, Escape or the back gesture. The page works without this file:
 // the HTML marks TARA as active, so its collage shows on desktop.
+
 "use strict";
 
 const EASE = 0.08; // share of the remaining distance covered per frame
 const SETTLED = 0.001; // stop animating below this distance
 const LEFT_LIMIT = -0.35; // furthest left drift, reached at the stage's left edge
-const PHONE = window.matchMedia("(max-width: 47.99rem)"); // same breakpoint as style.css
+const PHONE = window.matchMedia("(max-width: 47.99rem)"); // same breakpoint as css/overlay.css
 
 function activateProjectRows(section, overlay) {
   const rows = section.querySelectorAll(".work li[data-p]");
@@ -110,7 +111,7 @@ function phoneOverlay(section, stage) {
   };
 
   const closeByUser = () => {
-    if (history.state && history.state.workOverlay) {
+    if (history.state?.workOverlay) {
       history.back(); // popstate hides it
       return;
     }
@@ -138,7 +139,8 @@ function driftWithPointer(section, stage) {
     current.y += (target.y - current.y) * EASE;
     stage.style.setProperty("--mx", current.x.toFixed(4));
     stage.style.setProperty("--my", current.y.toFixed(4));
-    const distance = Math.abs(target.x - current.x) + Math.abs(target.y - current.y);
+    const distance =
+      Math.abs(target.x - current.x) + Math.abs(target.y - current.y);
     if (distance < SETTLED) {
       frame = 0;
       return;
@@ -175,8 +177,12 @@ function setUpWork() {
   activateProjectRows(section, phoneOverlay(section, stage));
   followScroll(section);
 
-  const stillMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const stillMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const finePointer = window.matchMedia(
+    "(hover: hover) and (pointer: fine)",
+  ).matches;
   if (stillMotion || !finePointer) {
     return;
   }

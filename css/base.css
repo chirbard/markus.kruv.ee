@@ -1,0 +1,59 @@
+/* Base only: one font, one size step. Design comes later, piece by piece. */
+
+:root {
+  color-scheme: light;
+  --text: #111;
+  --muted: #666;
+  --rule-quiet: #aaa;
+  --red: #b12b28;
+  --bg: #fff;
+  --gap: 1.5rem;
+  /* Space above and below every section header, and from the hero to the first. */
+  --section-space: 3.5rem;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+}
+
+main {
+  max-width: 64rem;
+  padding: 0 1rem 4rem;
+  margin: 0 auto;
+}
+
+h1,
+h2 {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+a {
+  color: inherit;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+@media (min-width: 48rem) {
+  main {
+    padding: 0 2rem 6rem;
+  }
+
+  :root {
+    --section-space: 6rem;
+  }
+}

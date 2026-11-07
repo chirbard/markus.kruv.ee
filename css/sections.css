@@ -1,0 +1,144 @@
+/* Section headers read like a book's table of contents: bold capitals,
+   a red number that is true of the section (its years or how many items),
+   and black rules around it. Like the book, each header sits at its own
+   place in the row; --at is the grid column its text starts on (0 = flush
+   left), so the scatter is hand-picked and always lands on the grid. The
+   rule is 3px like the strokes of the mark and the chevrons. */
+/* Below the header, each section is a 12-column grid. Content sits in
+   narrow blocks on it rather than full-width lines, and gets room to breathe
+   so the headers don't outweigh it. On a phone everything is one column. */
+.section {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+}
+
+.section > * {
+  grid-column: 1 / -1;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin: var(--section-space) 0;
+}
+
+/* The hero keeps 2.5rem of padding under its location line (it mirrors the
+   space above the mark), so the first header subtracts it to sit exactly
+   one section-space below that line. */
+.hero + .section .section-head {
+  margin-top: calc(var(--section-space) - 2.5rem);
+}
+
+.section-head::before,
+.section-head::after {
+  content: "";
+  min-width: 2rem;
+  border-top: 3px solid var(--text);
+  /* Centre on the capitals, which sit above the line box's middle. */
+  margin-top: -0.12em;
+}
+
+/* Lead rule: reaches column --at, minus the flex gap before the text. */
+.section-head::before {
+  flex: 0 1 calc(var(--at) * (100% + var(--gap)) / 12 - 0.4em);
+}
+
+.section-head::after {
+  flex: 1;
+}
+
+#currently {
+  --at: 0;
+}
+
+#currently .section-head::before {
+  content: none;
+}
+
+#work {
+  --at: 4;
+}
+
+#recognition {
+  --at: 6;
+}
+
+/* Flush right: the lead rule takes all the room, no tail. */
+#education .section-head::before {
+  flex: 1;
+}
+
+#education .section-head::after {
+  content: none;
+}
+
+#languages {
+  --at: 3;
+}
+
+#elsewhere {
+  --at: 7;
+}
+
+.section-num {
+  color: var(--red);
+}
+
+.cell-title,
+.cell-note,
+.education span {
+  display: block;
+}
+
+.cell-title {
+  font-weight: 700;
+}
+
+.cell-note {
+  color: var(--muted);
+}
+
+.cells {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem var(--gap);
+}
+
+.languages {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.links li + li {
+  margin-top: 0.25rem;
+}
+
+@media (min-width: 48rem) {
+  /* Each block starts on its header's column (--at + 1). */
+  .currently {
+    grid-column: 1 / span 5;
+    font-size: 1.25rem;
+    line-height: 1.35;
+  }
+
+  .recognition {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .education {
+    grid-column: 9 / -1;
+  }
+
+  .languages {
+    grid-column: 4 / span 6;
+  }
+
+  .links {
+    grid-column: 8 / -1;
+  }
+}

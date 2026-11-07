@@ -1,0 +1,219 @@
+/* Hero: a book's title page. Marks top right, title middle left,
+   lines bottom left, colophon bottom right. */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    ".     mark"
+    "title title"
+    "chevrons meta";
+  /* Exactly one screen, same space above the mark as below the meta line. */
+  min-height: 100vh;
+
+  padding: 2.5rem 0;
+}
+
+.mark {
+  grid-area: mark;
+  justify-self: end;
+}
+
+/* Centred, then lifted a little: the margin pushes the centre up by half of it. */
+.hero-title {
+  grid-area: title;
+  align-self: center;
+  margin-bottom: 5rem;
+}
+
+.chevrons {
+  grid-area: chevrons;
+  align-self: end;
+}
+
+/* Chevron conveyor, one 6.6s cycle (erase 0.9s, fall 0.6s, draw 0.9s, rests between).
+   The fall is real gravity (t squared) and lands with two bounces, 1px then
+   0.25px, at the same gravity, so it settles instead of slamming.
+   rest, the lowest erases left to right, rest, the upper two drop one place,
+   rest, a new one draws in at the top left to right. The end frame equals the
+   start frame, so the loop has no seam. Reduced motion: three still chevrons. */
+.chev-top {
+  transform: translateY(0);
+}
+
+.chev-mid {
+  transform: translateY(10px);
+}
+
+.chev-low {
+  transform: translateY(20px);
+}
+
+.chev-new {
+  clip-path: inset(0 100% 0 0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chev {
+    animation-duration: 6.6s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  .chev-low {
+    animation-name: chevron-erase;
+  }
+
+  .chev-top {
+    animation-name: chevron-drop-top;
+  }
+
+  .chev-mid {
+    animation-name: chevron-drop-mid;
+  }
+
+  .chev-new {
+    animation-name: chevron-draw;
+  }
+}
+
+@keyframes chevron-erase {
+  0%,
+  15.2% {
+    clip-path: inset(0 0 0 0);
+  }
+
+  28.8%,
+  100% {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+@keyframes chevron-drop-top {
+  0%,
+  34.11% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  43.21% {
+    transform: translateY(10px);
+    animation-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
+  }
+
+  46.06% {
+    transform: translateY(9px);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  48.94% {
+    transform: translateY(10px);
+    animation-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
+  }
+
+  50.38% {
+    transform: translateY(9.75px);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  51.82%,
+  100% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes chevron-drop-mid {
+  0%,
+  34.11% {
+    transform: translateY(10px);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  43.21% {
+    transform: translateY(20px);
+    animation-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
+  }
+
+  46.06% {
+    transform: translateY(19px);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  48.94% {
+    transform: translateY(20px);
+    animation-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
+  }
+
+  50.38% {
+    transform: translateY(19.75px);
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  }
+
+  51.82%,
+  100% {
+    transform: translateY(20px);
+  }
+}
+
+@keyframes chevron-draw {
+  0%,
+  59.11% {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  72.71%,
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.hero-meta {
+  grid-area: meta;
+  align-self: end;
+}
+
+.hero h1 {
+  font-size: clamp(3rem, 9vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.intro {
+  max-width: 30ch;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  line-height: 1.25;
+}
+
+.hero-meta {
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+/* Flags sit on the baseline like lower-case letters, a little taller than
+   x-height (8px at 14px Helvetica). The Estonian flag's white stripe has
+   its own hairline edge in the SVG so it doesn't vanish on white. */
+.flag {
+  width: 1.77ex;
+  height: 1.105ex;
+  vertical-align: baseline;
+}
+
+.flag-square {
+  width: 1.105ex;
+}
+
+/* Break the line only between clauses, never inside one. */
+.hero-meta span {
+  white-space: nowrap;
+}
+
+.hero-meta .train {
+  display: block;
+}
+
+@supports (min-height: 100svh) {
+  .hero {
+    min-height: 100svh;
+  }
+}

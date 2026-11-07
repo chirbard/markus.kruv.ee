@@ -1,0 +1,4 @@
+target-version = "py314"
+[lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "C4", "ANN", "D", "RUF", "S", "N", "A", "PERF"]
+pydocstyle.convention = "google"
