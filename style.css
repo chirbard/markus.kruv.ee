@@ -4,6 +4,7 @@
   color-scheme: light;
   --text: #111;
   --muted: #666;
+  --rule-quiet: #aaa;
   --red: #B12B28;
   --bg: #fff;
   --gap: 1.5rem;
@@ -345,25 +346,32 @@ ul {
   width: 1.105ex;
 }
 
+/* Work: a quiet index on the left (year, title), and on the right a
+   stage that shows the active project's collage. */
 .work li {
   display: grid;
   grid-template-columns: 6rem 1fr;
   gap: 0 var(--gap);
-  margin-bottom: 1rem;
+  padding: 1.4rem 0;
+  color: var(--rule-quiet);
+  cursor: default;
+  transition: color 0.2s;
 }
 
-.work .year,
-.work .where {
-  color: var(--muted);
+.work li:focus-visible {
+  outline: 1px solid var(--text);
+  outline-offset: 2px;
 }
 
-.work .line,
-.work .where {
-  grid-column: 2;
+.work .year {
+  font-size: 0.875rem;
+  line-height: 1.9;
 }
 
 .work .title {
-  font-weight: 700;
+  font-size: 1.375rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 .cell-title,
@@ -390,38 +398,105 @@ ul {
   grid-template-columns: repeat(3, 1fr);
 }
 
-/* Work: the list on the left, a wall of images on the right. Hovering a
-   row fades every image that isn't its own; hovering an image fades every
-   other row and image. data-p ties a row to its images. No JS: :has(). */
-/* A grid, not CSS columns: it fills row by row in source order, so tiles
-   listed in the same order as the work rows stay near their text (TARA at
-   the top). Everything is measured in --u, a fraction of the wall's own
-   width: a column is 30.667u wide and the gap 4u, so a tile spanning
-   (30.667 / its aspect ratio + 4) rows has exactly its image's shape at
-   any width and nothing gets cropped. 2 columns: 65.333u = 100%. */
-.wall-frame {
-  container-type: inline-size;
+/* The stage: one collage per project, stacked; only the active one shows.
+   Inside, every element is placed absolutely: --x, --y (% of the stage),
+   --w (% of its width), --z (stacking). Images keep their own shape via
+   aspect-ratio. Like a book spread: a few overlapping images, the name set
+   big and vertical, and a small text block beside them. Each element also
+   drifts with the pointer by its depth --d (times --drift at the stage
+   edge); work.js
+   sets --mx and --my on the stage. */
+.stage {
+  /* How far the depths reach: --d of 30 at the stage edge moves 30 x this. */
+  --drift: 2px;
+  position: relative;
+  aspect-ratio: 5 / 6;
   margin-top: 3rem;
 }
 
-.wall {
-  --u: calc(100cqw / 65.333);
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: var(--u);
-  grid-auto-flow: dense;
-  column-gap: calc(4 * var(--u));
+.collage {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.35s, visibility 0s 0.35s;
 }
 
-.wall .tile {
-  margin-bottom: calc(4 * var(--u));
+.collage > * {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  z-index: var(--z, 1);
+  translate: calc(var(--mx, 0) * var(--d, 0) * var(--drift)) calc(var(--my, 0) * var(--d, 0) * var(--drift));
+}
+
+.layer {
+  width: var(--w);
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.12);
+}
+
+.layer.tile-phone {
+  aspect-ratio: 1125 / 2054;
+}
+
+.layer.tile-demo {
+  aspect-ratio: 886 / 1616;
+}
+
+.layer.seq-olecus {
+  aspect-ratio: 886 / 1621;
+}
+
+.layer.tile-phone-long {
+  aspect-ratio: 886 / 1816;
+}
+
+.layer.tile-phone-figma {
+  aspect-ratio: 390 / 844;
+}
+
+.layer.tile-banner {
+  aspect-ratio: 2966 / 1850;
+}
+
+.layer.tile-poster {
+  aspect-ratio: 3 / 2;
+}
+
+.layer.tile-text {
+  aspect-ratio: 4 / 5;
+  background: var(--text);
+  font-size: 1.25rem;
+  padding: 1.5rem;
+}
+
+.note {
+  width: var(--w);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.note-where {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+
+/* Read bottom to top, like a spine. */
+.vtitle {
+  writing-mode: vertical-rl;
+  rotate: 180deg;
+  font-size: clamp(2rem, 4.5vw, 3.75rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
 /* Captions sit in the middle of the image in a serif, like a title set
    over a photograph. Didot ships with macOS and iOS; others fall back to a
    Bodoni or Georgia. The grey stands in for a screenshot until one arrives. */
 .tile {
-  margin-bottom: var(--gap);
   background: #9a9a9a;
   display: flex;
   align-items: center;
@@ -452,7 +527,7 @@ ul {
 /* A phone screen that taps its login button: the login page slides in
    from the right over the site while the address bar stays and only its
    URL fades, like the browser it was taken in. Tiles start 2s apart, so
-   the wall tells the story in order: log in once on eesti.ee via TARA,
+   the story reads in order: log in once on eesti.ee via TARA,
    then every other site only continues the GovSSO session. One 8s loop:
    tap at 25-35%, slide in 35-45%, hold, fade back to the site at 90-100%.
    Reduced motion: the site screen stays. */
@@ -1664,83 +1739,21 @@ ul {
 }
 /* seq-css.py: end */
 
-/* Desktop placement is curated: every tile names its column (c1-c3) and
-   its first row (--row, in u). The rows were solved so that each
-   project's tiles sit near its line in the list, the two wide tiles land
-   on level column edges, and all three columns end on the same row. A
-   new or resized tile means re-solving them. The phone layout ignores it
-   and flows in source order. */
-
-/* Row spans in u (see .wall): image height at a 30.667u column, plus the
-   4u gap. Source sizes in comments. */
-
-/* Desktop screenshot across two columns (2966 x 1850, 65.333u wide). */
-.tile-banner {
-  grid-column: span 2;
-  grid-row-end: span 45;
-}
-
-/* Project card across two columns (600 x 400, from the old site). */
-.tile-poster {
-  grid-column: span 2;
-  grid-row-end: span 48;
-}
-
-/* Phone page + browser bar (1125 x 2054; demo 886 x 1616; Olecus 886 x 1621). */
-.tile-phone {
-  grid-row-end: span 60;
-}
-
-/* Full app screen without browser chrome (886 x 1816, 1125 x 2304). */
-.tile-phone-long {
-  grid-row-end: span 67;
-}
-
-/* Figma frame at iPhone size (390 x 844). */
-.tile-phone-figma {
-  grid-row-end: span 70;
-}
-
-/* A text tile in place of an image; its height is whatever levels the
-   columns. */
-.tile-text {
-  grid-row-end: span 67;
-  background: var(--text);
-  font-size: 1.25rem;
-}
-
-/* Placeholders: 3:4, 1:1, 4:3. */
-.tile-tall {
-  grid-row-end: span 45;
-}
-
-.tile-square {
-  grid-row-end: span 35;
-}
-
-.tile-wide {
-  grid-row-end: span 27;
-}
-
-#work [data-p] {
-  transition: opacity 0.2s;
-}
-
-#work:has([data-p]:hover) [data-p] {
-  opacity: 0.25;
-}
-
-#work:has([data-p="tara"]:hover) [data-p="tara"],
-#work:has([data-p="digidoc"]:hover) [data-p="digidoc"],
-#work:has([data-p="valuation"]:hover) [data-p="valuation"],
-#work:has([data-p="olecus"]:hover) [data-p="olecus"],
-#work:has([data-p="juur"]:hover) [data-p="juur"],
-#work:has([data-p="pic"]:hover) [data-p="pic"],
-#work:has([data-p="edf"]:hover) [data-p="edf"],
-#work:has([data-p="summerswap"]:hover) [data-p="summerswap"],
-#work:has([data-p="wastelocker"]:hover) [data-p="wastelocker"],
-#work:has([data-p="rentgo"]:hover) [data-p="rentgo"] {
+/* The active project: its row turns black, its collage fades in. */
+#work[data-active="tara"] [data-p="tara"],
+#work[data-active="digidoc"] [data-p="digidoc"],
+#work[data-active="valuation"] [data-p="valuation"],
+#work[data-active="olecus"] [data-p="olecus"],
+#work[data-active="summerswap"] [data-p="summerswap"],
+#work[data-active="wastelocker"] [data-p="wastelocker"],
+#work[data-active="juur"] [data-p="juur"],
+#work[data-active="pic"] [data-p="pic"],
+#work[data-active="edf"] [data-p="edf"],
+#work[data-active="rentgo"] [data-p="rentgo"] {
+  color: var(--text);
+  visibility: visible;
   opacity: 1;
+  transition: opacity 0.35s, color 0.2s;
 }
 
 .links li + li {
@@ -1763,51 +1776,19 @@ ul {
     line-height: 1.35;
   }
 
-  /* The list stays in view while the taller wall scrolls past it. */
   .work {
-    grid-column: 1 / span 5;
+    grid-column: 1 / span 4;
     align-self: start;
-    position: sticky;
-    top: 2rem;
   }
 
   .work li {
-    grid-template-columns: 5rem 1fr;
+    grid-template-columns: 5.5rem 1fr;
   }
 
-  .wall-frame {
+  /* One empty column between the index and the stage. */
+  .stage {
     grid-column: 6 / -1;
     margin-top: 0;
-  }
-
-  /* 3 columns: 3 x 30.667u + 2 x 4u = 100u = 100%. */
-  .wall {
-    --u: 1cqw;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .c1 {
-    grid-column: 1;
-  }
-
-  .c2 {
-    grid-column: 2;
-  }
-
-  .c3 {
-    grid-column: 3;
-  }
-
-  .wall .tile {
-    grid-row-start: var(--row, auto);
-  }
-
-  .tile-banner.c1 {
-    grid-column: 1 / span 2;
-  }
-
-  .tile-poster.c1 {
-    grid-column: 1 / span 2;
   }
 
   .recognition {
