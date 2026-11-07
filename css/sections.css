@@ -208,6 +208,36 @@
   color: var(--text);
 }
 
+/* Phone: one column leaves everything hugging the left edge, so these
+   two sections use the width as a diagonal. Education: the figure on the
+   right, the facts below on the left. Languages: a staircase, stepping
+   right as the level drops. */
+@media (max-width: 47.99rem) {
+  .edu-figure {
+    justify-content: flex-end;
+    font-size: 32vw;
+  }
+
+  .edu-caption {
+    text-align: right;
+  }
+
+  .languages {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2.5rem;
+  }
+
+  .lang-fluent {
+    margin-left: 30%;
+  }
+
+  .lang-learning {
+    align-self: flex-end;
+    text-align: right;
+  }
+}
+
 @media (min-width: 48rem) {
   /* Two rows of three, every mark the same size: competitions above,
      a prize and two certificates below. */

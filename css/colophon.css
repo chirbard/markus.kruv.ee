@@ -58,6 +58,14 @@
   white-space: nowrap;
 }
 
+/* Phone: the links to the right edge, so the two small columns frame
+   the width instead of both hugging the left. */
+@media (max-width: 47.99rem) {
+  .colophon-links {
+    text-align: right;
+  }
+}
+
 @media (min-width: 48rem) {
   .colophon-text {
     grid-column: 1 / span 4;
