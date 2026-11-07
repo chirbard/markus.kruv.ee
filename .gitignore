@@ -1,0 +1,4 @@
+# Raw captures (screenshots, recordings, Figma exports) live here. They can
+# show personal data (ID code, CAN, IPs, session IDs); only the blurred,
+# compressed copies in media/ go into the repo.
+raw/

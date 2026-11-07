@@ -390,6 +390,1359 @@ ul {
   grid-template-columns: repeat(3, 1fr);
 }
 
+/* Work: the list on the left, a wall of images on the right. Hovering a
+   row fades every image that isn't its own; hovering an image fades every
+   other row and image. data-p ties a row to its images. No JS: :has(). */
+/* A grid, not CSS columns: it fills row by row in source order, so tiles
+   listed in the same order as the work rows stay near their text (TARA at
+   the top). Everything is measured in --u, a fraction of the wall's own
+   width: a column is 30.667u wide and the gap 4u, so a tile spanning
+   (30.667 / its aspect ratio + 4) rows has exactly its image's shape at
+   any width and nothing gets cropped. 2 columns: 65.333u = 100%. */
+.wall-frame {
+  container-type: inline-size;
+  margin-top: 3rem;
+}
+
+.wall {
+  --u: calc(100cqw / 65.333);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: var(--u);
+  grid-auto-flow: dense;
+  column-gap: calc(4 * var(--u));
+}
+
+.wall .tile {
+  margin-bottom: calc(4 * var(--u));
+}
+
+/* Captions sit in the middle of the image in a serif, like a title set
+   over a photograph. Didot ships with macOS and iOS; others fall back to a
+   Bodoni or Georgia. The grey stands in for a screenshot until one arrives. */
+.tile {
+  margin-bottom: var(--gap);
+  background: #9a9a9a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
+  font-family: Didot, "Bodoni 72", "Bodoni MT", Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.15;
+  color: #fff;
+}
+
+/* A tile holding a real image: no caption, the image fills it. */
+.tile-media {
+  padding: 0;
+  background: #eee;
+  overflow: hidden;
+}
+
+.tile-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* A phone screen that taps its login button: the login page slides in
+   from the right over the site while the address bar stays and only its
+   URL fades, like the browser it was taken in. Tiles start 2s apart, so
+   the wall tells the story in order: log in once on eesti.ee via TARA,
+   then every other site only continues the GovSSO session. One 8s loop:
+   tap at 25-35%, slide in 35-45%, hold, fade back to the site at 90-100%.
+   Reduced motion: the site screen stays. */
+.tile-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0;
+  overflow: hidden;
+  background: #eee;
+}
+
+.flow-page,
+.flow-bar {
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-page {
+  flex: 1;
+}
+
+/* The bar keeps its own proportions (1125 x 176 source pixels; the demo
+   recording's bar is 886 x 135). */
+.flow-bar {
+  aspect-ratio: 1125 / 176;
+}
+
+.tile-demo .flow-bar {
+  aspect-ratio: 886 / 135;
+}
+
+.flow-page img,
+.flow-bar img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.flow-page .flow-next {
+  transform: translateX(100%);
+}
+
+.flow-bar .flow-next {
+  opacity: 0;
+}
+
+.flow-tap {
+  position: absolute;
+  left: var(--tap-x);
+  top: var(--tap-y);
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.875rem 0 0 -0.875rem;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.25);
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.9);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flow-page .flow-next,
+  .flow-bar .flow-next,
+  .flow-tap {
+    animation-duration: 8s;
+    animation-delay: var(--delay, 0s);
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+  }
+
+  .flow-page .flow-next {
+    animation-name: flow-slide;
+  }
+
+  .flow-bar .flow-next {
+    animation-name: flow-url;
+  }
+
+  .flow-tap {
+    animation-name: flow-tap;
+  }
+}
+
+@keyframes flow-tap {
+  0%,
+  25% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  28% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  32% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  36%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes flow-slide {
+  0%,
+  35% {
+    transform: translateX(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  45%,
+  90% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes flow-url {
+  0%,
+  37% {
+    opacity: 0;
+  }
+
+  45%,
+  90% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The TARA demo login as five screens in one 12s loop: tap Log in, slide
+   to TARA, tap Smart-ID, slide, tap Jätka, slide to "please wait", then
+   the logged-in dashboard (ID code blurred). The Smart-ID app itself is
+   skipped. Same parts as .tile-flow; each screen and tap has its own
+   keyframes, generated from the timeline in this comment's rule order. */
+.tile-demo .flow-page img + img {
+  transform: translateX(100%);
+}
+
+.tile-demo .flow-bar img + img {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tile-demo .demo-s2 {
+    animation: demo-slide-2 12s infinite both;
+  }
+
+  .tile-demo .flow-bar .demo-s2 {
+    animation-name: demo-url-2;
+  }
+
+  .tile-demo .demo-s3 {
+    animation: demo-slide-3 12s infinite both;
+  }
+
+  .tile-demo .flow-bar .demo-s3 {
+    animation-name: demo-url-3;
+  }
+
+  .tile-demo .demo-s4 {
+    animation: demo-slide-4 12s infinite both;
+  }
+
+  .tile-demo .flow-bar .demo-s4 {
+    animation-name: demo-url-4;
+  }
+
+  .tile-demo .demo-s5 {
+    animation: demo-slide-5 12s infinite both;
+  }
+
+  .tile-demo .flow-bar .demo-s5 {
+    animation-name: demo-url-5;
+  }
+
+  .tile-demo .demo-t1 {
+    animation: demo-tap-1 12s infinite both;
+  }
+
+  .tile-demo .demo-t2 {
+    animation: demo-tap-2 12s infinite both;
+  }
+
+  .tile-demo .demo-t3 {
+    animation: demo-tap-3 12s infinite both;
+  }
+}
+
+@keyframes demo-slide-2 {
+  0%,
+  19% {
+    transform: translateX(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  25%,
+  92% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes demo-url-2 {
+  0%,
+  21% {
+    opacity: 0;
+  }
+
+  25%,
+  92% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes demo-slide-3 {
+  0%,
+  41% {
+    transform: translateX(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  47%,
+  92% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes demo-url-3 {
+  0%,
+  43% {
+    opacity: 0;
+  }
+
+  47%,
+  92% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes demo-slide-4 {
+  0%,
+  63% {
+    transform: translateX(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  69%,
+  92% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes demo-url-4 {
+  0%,
+  65% {
+    opacity: 0;
+  }
+
+  69%,
+  92% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes demo-slide-5 {
+  0%,
+  77% {
+    transform: translateX(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  83%,
+  92% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes demo-url-5 {
+  0%,
+  79% {
+    opacity: 0;
+  }
+
+  83%,
+  92% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes demo-tap-1 {
+  0%,
+  12% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  13.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  15.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  18%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes demo-tap-2 {
+  0%,
+  33% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  34.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  36.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  39%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes demo-tap-3 {
+  0%,
+  55% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  56.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  58.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  61%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+/* Step sequences: an app's screens in turn, each entering by a slide
+   (page change) or a fade (sheet or state change), some after a tap. The
+   keyframes are generated by seq-css.py (ai-plans/job-search/media-scripts)
+   from one timeline per sequence; edit the timeline there, not below. */
+.tile-seq .is-slide {
+  transform: translateX(100%);
+}
+
+.tile-seq .is-fade {
+  opacity: 0;
+}
+
+.tile-seq .is-up {
+  transform: translateY(100%);
+}
+
+/* A web app's own bottom nav plus the address bar (886 x 255 source px). */
+.flow-bar-app {
+  aspect-ratio: 886 / 255;
+}
+
+/* seq-css.py: start (generated, do not edit by hand) */
+.seq-digidoc .t2 {
+  --tap-x: 49.7%;
+  --tap-y: 41.6%;
+}
+
+.seq-digidoc .t3 {
+  --tap-x: 78.6%;
+  --tap-y: 90.9%;
+}
+
+.seq-digidoc .t4 {
+  --tap-x: 49.9%;
+  --tap-y: 69.3%;
+}
+
+.seq-olecus .t2 {
+  --tap-x: 50%;
+  --tap-y: 90.8%;
+}
+
+.seq-olecus .t3 {
+  --tap-x: 50%;
+  --tap-y: 23.8%;
+}
+
+.seq-olecus .t4 {
+  --tap-x: 50%;
+  --tap-y: 72%;
+}
+
+.seq-rentgo .t2 {
+  --tap-x: 50%;
+  --tap-y: 84.6%;
+}
+
+.seq-rentgo .t3 {
+  --tap-x: 50%;
+  --tap-y: 32.7%;
+}
+
+.seq-summerswap .t2 {
+  --tap-x: 70.7%;
+  --tap-y: 5.5%;
+}
+
+.seq-summerswap .t3 {
+  --tap-x: 49.8%;
+  --tap-y: 56.9%;
+}
+
+.seq-printincity .t2 {
+  --tap-x: 28.7%;
+  --tap-y: 52.6%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .seq-digidoc .s2 {
+    animation: digidoc-s2 16s var(--delay, 0s) infinite both;
+  }
+
+  .seq-digidoc .t2 {
+    animation: digidoc-t2 16s var(--delay, 0s) infinite both;
+  }
+
+  .seq-digidoc .s3 {
+    animation: digidoc-s3 16s var(--delay, 0s) infinite both;
+  }
+
+  .seq-digidoc .t3 {
+    animation: digidoc-t3 16s var(--delay, 0s) infinite both;
+  }
+
+  .seq-digidoc .s4 {
+    animation: digidoc-s4 16s var(--delay, 0s) infinite both;
+  }
+
+  .seq-digidoc .t4 {
+    animation: digidoc-t4 16s var(--delay, 0s) infinite both;
+  }
+
+  .seq-digidoc .s5 {
+    animation: digidoc-s5 16s var(--delay, 0s) infinite both;
+  }
+
+  .seq-digidoc .s6 {
+    animation: digidoc-s6 16s var(--delay, 0s) infinite both;
+  }
+
+  .seq-digidoc .s7 {
+    animation: digidoc-s7 16s var(--delay, 0s) infinite both;
+  }
+
+  .seq-digidoc .s8 {
+    animation: digidoc-s8 16s var(--delay, 0s) infinite both;
+  }
+
+  .seq-olecus .s2 {
+    animation: olecus-s2 14s var(--delay, 0s) infinite both;
+  }
+
+  .seq-olecus .t2 {
+    animation: olecus-t2 14s var(--delay, 0s) infinite both;
+  }
+
+  .seq-olecus .s3 {
+    animation: olecus-s3 14s var(--delay, 0s) infinite both;
+  }
+
+  .seq-olecus .t3 {
+    animation: olecus-t3 14s var(--delay, 0s) infinite both;
+  }
+
+  .seq-olecus .s4 {
+    animation: olecus-s4 14s var(--delay, 0s) infinite both;
+  }
+
+  .seq-olecus .t4 {
+    animation: olecus-t4 14s var(--delay, 0s) infinite both;
+  }
+
+  .seq-rentgo .s2 {
+    animation: rentgo-s2 10s var(--delay, 0s) infinite both;
+  }
+
+  .seq-rentgo .t2 {
+    animation: rentgo-t2 10s var(--delay, 0s) infinite both;
+  }
+
+  .seq-rentgo .s3 {
+    animation: rentgo-s3 10s var(--delay, 0s) infinite both;
+  }
+
+  .seq-rentgo .t3 {
+    animation: rentgo-t3 10s var(--delay, 0s) infinite both;
+  }
+
+  .seq-summerswap .s2 {
+    animation: summerswap-s2 10s var(--delay, 0s) infinite both;
+  }
+
+  .seq-summerswap .t2 {
+    animation: summerswap-t2 10s var(--delay, 0s) infinite both;
+  }
+
+  .seq-summerswap .s3 {
+    animation: summerswap-s3 10s var(--delay, 0s) infinite both;
+  }
+
+  .seq-summerswap .t3 {
+    animation: summerswap-t3 10s var(--delay, 0s) infinite both;
+  }
+
+  .seq-printincity .s2 {
+    animation: printincity-s2 8s var(--delay, 0s) infinite both;
+  }
+
+  .seq-printincity .t2 {
+    animation: printincity-t2 8s var(--delay, 0s) infinite both;
+  }
+}
+
+@keyframes digidoc-s2 {
+  0%,
+  13% {
+    transform: translateX(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  19%,
+  95% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes digidoc-t2 {
+  0%,
+  6% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  7.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  9.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  12%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes digidoc-s3 {
+  0%,
+  32% {
+    transform: translateX(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  38%,
+  95% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes digidoc-t3 {
+  0%,
+  25% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  26.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  28.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  31%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes digidoc-s4 {
+  0%,
+  51% {
+    opacity: 0;
+  }
+
+  54%,
+  95% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes digidoc-t4 {
+  0%,
+  44% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  45.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  47.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes digidoc-s5 {
+  0%,
+  60% {
+    opacity: 0;
+  }
+
+  62%,
+  95% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes digidoc-s6 {
+  0%,
+  67% {
+    opacity: 0;
+  }
+
+  69%,
+  95% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes digidoc-s7 {
+  0%,
+  75% {
+    opacity: 0;
+  }
+
+  78%,
+  95% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes digidoc-s8 {
+  0%,
+  85% {
+    opacity: 0;
+  }
+
+  89%,
+  95% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes olecus-s2 {
+  0%,
+  17% {
+    opacity: 0;
+  }
+
+  21%,
+  92% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes olecus-t2 {
+  0%,
+  10% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  11.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  13.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  16%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes olecus-s3 {
+  0%,
+  42% {
+    opacity: 0;
+  }
+
+  46%,
+  92% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes olecus-t3 {
+  0%,
+  35% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  36.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  38.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  41%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes olecus-s4 {
+  0%,
+  62% {
+    transform: translateY(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  69%,
+  92% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes olecus-t4 {
+  0%,
+  55% {
+    opacity: 0;
+    top: var(--tap-y);
+  }
+
+  56.5% {
+    opacity: 1;
+    top: var(--tap-y);
+    animation-timing-function: ease-in-out;
+  }
+
+  62.5% {
+    opacity: 1;
+    top: calc(var(--tap-y) + -40%);
+  }
+
+  64%,
+  100% {
+    opacity: 0;
+    top: calc(var(--tap-y) + -40%);
+  }
+}
+
+@keyframes rentgo-s2 {
+  0%,
+  22% {
+    transform: translateX(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  30%,
+  90% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes rentgo-t2 {
+  0%,
+  15% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  16.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  18.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  21%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes rentgo-s3 {
+  0%,
+  52% {
+    transform: translateX(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  60%,
+  90% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes rentgo-t3 {
+  0%,
+  45% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  46.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  48.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes summerswap-s2 {
+  0%,
+  22% {
+    opacity: 0;
+  }
+
+  27%,
+  90% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes summerswap-t2 {
+  0%,
+  15% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  16.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  18.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  21%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes summerswap-s3 {
+  0%,
+  52% {
+    transform: translateX(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  60%,
+  90% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes summerswap-t3 {
+  0%,
+  45% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  46.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  48.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes printincity-s2 {
+  0%,
+  35% {
+    transform: translateX(100%);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  45%,
+  90% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  99% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes printincity-t2 {
+  0%,
+  25% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  26.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  28.5% {
+    opacity: 1;
+    transform: scale(0.85);
+  }
+
+  33%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+/* seq-css.py: end */
+
+/* Desktop placement is curated: every tile names its column (c1-c3) and
+   its first row (--row, in u). The rows were solved so that each
+   project's tiles sit near its line in the list, the two wide tiles land
+   on level column edges, and all three columns end on the same row. A
+   new or resized tile means re-solving them. The phone layout ignores it
+   and flows in source order. */
+
+/* Row spans in u (see .wall): image height at a 30.667u column, plus the
+   4u gap. Source sizes in comments. */
+
+/* Desktop screenshot across two columns (2966 x 1850, 65.333u wide). */
+.tile-banner {
+  grid-column: span 2;
+  grid-row-end: span 45;
+}
+
+/* Project card across two columns (600 x 400, from the old site). */
+.tile-poster {
+  grid-column: span 2;
+  grid-row-end: span 48;
+}
+
+/* Phone page + browser bar (1125 x 2054; demo 886 x 1616; Olecus 886 x 1621). */
+.tile-phone {
+  grid-row-end: span 60;
+}
+
+/* Full app screen without browser chrome (886 x 1816, 1125 x 2304). */
+.tile-phone-long {
+  grid-row-end: span 67;
+}
+
+/* Figma frame at iPhone size (390 x 844). */
+.tile-phone-figma {
+  grid-row-end: span 70;
+}
+
+/* A text tile in place of an image; its height is whatever levels the
+   columns. */
+.tile-text {
+  grid-row-end: span 67;
+  background: var(--text);
+  font-size: 1.25rem;
+}
+
+/* Placeholders: 3:4, 1:1, 4:3. */
+.tile-tall {
+  grid-row-end: span 45;
+}
+
+.tile-square {
+  grid-row-end: span 35;
+}
+
+.tile-wide {
+  grid-row-end: span 27;
+}
+
+#work [data-p] {
+  transition: opacity 0.2s;
+}
+
+#work:has([data-p]:hover) [data-p] {
+  opacity: 0.25;
+}
+
+#work:has([data-p="tara"]:hover) [data-p="tara"],
+#work:has([data-p="digidoc"]:hover) [data-p="digidoc"],
+#work:has([data-p="valuation"]:hover) [data-p="valuation"],
+#work:has([data-p="olecus"]:hover) [data-p="olecus"],
+#work:has([data-p="juur"]:hover) [data-p="juur"],
+#work:has([data-p="pic"]:hover) [data-p="pic"],
+#work:has([data-p="edf"]:hover) [data-p="edf"],
+#work:has([data-p="summerswap"]:hover) [data-p="summerswap"],
+#work:has([data-p="wastelocker"]:hover) [data-p="wastelocker"],
+#work:has([data-p="rentgo"]:hover) [data-p="rentgo"] {
+  opacity: 1;
+}
+
 .links li + li {
   margin-top: 0.25rem;
 }
@@ -410,8 +1763,51 @@ ul {
     line-height: 1.35;
   }
 
+  /* The list stays in view while the taller wall scrolls past it. */
   .work {
-    grid-column: 5 / -1;
+    grid-column: 1 / span 5;
+    align-self: start;
+    position: sticky;
+    top: 2rem;
+  }
+
+  .work li {
+    grid-template-columns: 5rem 1fr;
+  }
+
+  .wall-frame {
+    grid-column: 6 / -1;
+    margin-top: 0;
+  }
+
+  /* 3 columns: 3 x 30.667u + 2 x 4u = 100u = 100%. */
+  .wall {
+    --u: 1cqw;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .c1 {
+    grid-column: 1;
+  }
+
+  .c2 {
+    grid-column: 2;
+  }
+
+  .c3 {
+    grid-column: 3;
+  }
+
+  .wall .tile {
+    grid-row-start: var(--row, auto);
+  }
+
+  .tile-banner.c1 {
+    grid-column: 1 / span 2;
+  }
+
+  .tile-poster.c1 {
+    grid-column: 1 / span 2;
   }
 
   .recognition {
