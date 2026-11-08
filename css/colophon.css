@@ -59,10 +59,19 @@
 }
 
 /* Phone: the links to the right edge, so the two small columns frame
-   the width instead of both hugging the left. */
+   the width instead of both hugging the left. Lines 24px apart and each
+   link 24px tall, so a thumb hits one link (WCAG 2.5.8 target size). */
 @media (max-width: 47.99rem) {
   .colophon-links {
     text-align: right;
+    line-height: 2;
+    /* The taller line adds (2 - 1.6) / 2 em of leading below the last
+       link; pull it back so it shares the left column's baseline. */
+    margin-bottom: -0.2em;
+  }
+
+  .colophon-links a {
+    padding-block: 0.375rem;
   }
 }
 

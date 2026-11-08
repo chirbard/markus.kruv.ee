@@ -45,6 +45,14 @@ cleaned on exit. Scripts replace only their own named outputs; they never
 clear the media directory. Keep committed media as the reference: verify
 regenerated files in a temporary output directory before replacing them.
 
+`smaller.sh` (ImageMagick and cwebp) writes the `-320`/`-440` copies of the
+screens (`-600` for the wide GovSSO shot) that `srcset` offers desktop; run it
+after any other media script. Images use `sizes="auto, …"`: Chrome sizes
+them from layout, Safari takes the fallback. Phones keep the full files.
+
+`node tools/dev/og-image.mjs` renders `og.png`, the 1200x630 link preview,
+from the hero. Re-run it when the hero changes.
+
 CSS responsibilities (and cascade): base, hero, sections, work, tiles,
 flow, generated sequences, phone overlay. The flow and overlay components
 have separate files to keep every hand-written stylesheet under 300 lines.
