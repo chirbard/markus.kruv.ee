@@ -66,6 +66,22 @@
   content: none;
 }
 
+/* Even flush left, the full name needs ~400px at phone size and would wrap,
+   so phones get the short one. */
+.head-short {
+  display: none;
+}
+
+@media (max-width: 47.99rem) {
+  .head-long {
+    display: none;
+  }
+
+  .head-short {
+    display: inline;
+  }
+}
+
 /* Flush right: the lead rule takes all the room, no tail. */
 #education .section-head::before {
   flex: 1;
