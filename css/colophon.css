@@ -26,8 +26,15 @@
   text-transform: uppercase;
 }
 
+/* 24ch breaks the first line after "Estonia's", in the monospace text. */
 .colophon-text {
   grid-column: 1 / span 6;
+  max-width: 24ch;
+}
+
+/* Keeps "e-government" whole; phones otherwise break it at the hyphen. */
+.colophon-text .nobreak {
+  white-space: nowrap;
 }
 
 .colophon-links {
